@@ -31,11 +31,8 @@ import {
   FaLightbulb,
   FaFlask,
   FaUser,
-  FaBuilding,
-  FaMagic,
-  FaStar
+  FaBuilding
 } from 'react-icons/fa';
-import { useScrollAnimation, useScrollReveal } from '../hooks/useScrollAnimation';
 
 interface CareerFormProps {
   onSubmit: (input: UserInput) => void;
@@ -55,21 +52,224 @@ function CareerForm({ onSubmit, isLoading }: CareerFormProps) {
   const [showCustomInterestsInput, setShowCustomInterestsInput] = useState(false);
   const [customDomain, setCustomDomain] = useState('');
   const [showCustomDomainInput, setShowCustomDomainInput] = useState(false);
-  
-  const formRef = useScrollAnimation();
-  const headerRef = useScrollReveal(100);
 
   const programmingLanguages = [
-    // Top 10 Most Popular Programming Languages & Technologies
-    'JavaScript', 'Python', 'Java', 'TypeScript', 'C++', 'C#', 'Go', 'React', 'Node.js', 'SQL',
+    // Programming Languages - General
+    'JavaScript', 'Python', 'Java', 'TypeScript', 'C++', 'C#', 'Go', 'Rust',
+    'PHP', 'Ruby', 'Swift', 'Kotlin', 'Scala', 'R', 'MATLAB', 'SQL',
+    'C', 'C#', 'Perl', 'Haskell', 'Clojure', 'Erlang', 'Elixir', 'Dart',
+    'Lua', 'Julia', 'Fortran', 'COBOL', 'Assembly', 'Shell/Bash', 'PowerShell',
+    
+    // Web Development
+    'HTML/CSS', 'React', 'Vue.js', 'Angular', 'Svelte', 'Next.js', 'Nuxt.js',
+    'Node.js', 'Express.js', 'Django', 'Flask', 'FastAPI', 'Spring Boot',
+    'Laravel', 'ASP.NET', 'Ruby on Rails', 'Symfony', 'CodeIgniter',
+    'jQuery', 'Bootstrap', 'Tailwind CSS', 'Sass/SCSS', 'Webpack', 'Vite',
+    
+    // Mobile Development
+    'React Native', 'Flutter', 'Xamarin', 'Ionic', 'Cordova/PhoneGap',
+    'Android Studio', 'Xcode', 'Kotlin (Android)', 'Swift (iOS)',
+    
+    // Database Technologies
+    'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite', 'Oracle',
+    'SQL Server', 'MariaDB', 'Cassandra', 'Neo4j', 'Firebase', 'Supabase',
+    'DynamoDB', 'Elasticsearch', 'InfluxDB', 'CouchDB',
+    
+    // Cloud & DevOps
+    'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins',
+    'GitLab CI', 'GitHub Actions', 'Terraform', 'Ansible', 'Chef', 'Puppet',
+    'Nginx', 'Apache', 'Linux', 'Ubuntu', 'CentOS', 'Windows Server',
+    
+    // Data Science & Analytics
+    'Pandas', 'NumPy', 'Scikit-learn', 'TensorFlow', 'PyTorch', 'Keras',
+    'Jupyter', 'R Studio', 'Tableau', 'Power BI', 'Apache Spark', 'Hadoop',
+    'Apache Kafka', 'Apache Airflow', 'D3.js', 'Plotly', 'Matplotlib',
+    'Seaborn', 'ggplot2', 'Excel', 'Google Analytics', 'Mixpanel',
+    
+    // Game Development
+    'Unity', 'Unreal Engine', 'Godot', 'Blender', 'Maya', '3ds Max',
+    'Cocos2d', 'Phaser', 'Pygame', 'OpenGL', 'DirectX', 'Vulkan',
+    
+    // Blockchain & Cryptocurrency
+    'Solidity', 'Web3.js', 'Ethers.js', 'Truffle', 'Hardhat', 'Ganache',
+    'MetaMask', 'IPFS', 'Hyperledger', 'Ethereum', 'Bitcoin', 'Cardano',
+    
+    // IoT & Embedded Systems
+    'Arduino', 'Raspberry Pi', 'ESP32', 'MicroPython', 'CircuitPython',
+    'MQTT', 'CoAP', 'LoRaWAN', 'Zigbee', 'Bluetooth', 'WiFi', 'Ethernet',
+    
+    // Cybersecurity
+    'Wireshark', 'Nmap', 'Metasploit', 'Burp Suite', 'OWASP ZAP',
+    'Nessus', 'OpenVAS', 'Snort', 'Suricata', 'Kali Linux', 'Parrot OS',
+    
+    // Business & Finance Tools
+    'SAP', 'Oracle ERP', 'Salesforce', 'HubSpot', 'QuickBooks', 'Xero',
+    'Sage', 'Microsoft Dynamics', 'Workday', 'ServiceNow', 'Jira',
+    'Confluence', 'Slack', 'Microsoft Teams', 'Zoom', 'Trello', 'Asana',
+    
+    // Design & Multimedia
+    'Adobe Photoshop', 'Adobe Illustrator', 'Adobe InDesign', 'Figma',
+    'Sketch', 'Adobe XD', 'Canva', 'GIMP', 'Inkscape', 'Blender',
+    'Adobe Premiere Pro', 'Final Cut Pro', 'DaVinci Resolve', 'After Effects',
+    
+    // CAD & Engineering
+    'AutoCAD', 'SolidWorks', 'CATIA', 'Inventor', 'Fusion 360', 'Revit',
+    'SketchUp', 'Rhino', 'Maya', '3ds Max', 'ANSYS', 'MATLAB Simulink',
+    
+    // Medical & Healthcare
+    'Epic', 'Cerner', 'Allscripts', 'Meditech', 'NextGen', 'eClinicalWorks',
+    'DICOM', 'HL7', 'FHIR', 'PACS', 'EMR', 'EHR',
+    
+    // Legal & Compliance
+    'LexisNexis', 'Westlaw', 'Clio', 'MyCase', 'PracticePanther', 'Smokeball',
+    'Filevine', 'Litify', 'Zola Suite', 'TimeSolv',
+    
+    // Education & E-learning
+    'Moodle', 'Blackboard', 'Canvas', 'Google Classroom', 'Zoom', 'Microsoft Teams',
+    'Kahoot', 'Quizlet', 'Duolingo', 'Coursera', 'Udemy', 'edX',
+    
+    // Marketing & SEO
+    'Google Ads', 'Facebook Ads', 'Google Analytics', 'SEMrush', 'Ahrefs',
+    'Moz', 'Hootsuite', 'Buffer', 'Mailchimp', 'HubSpot', 'Salesforce',
+    'WordPress', 'Shopify', 'WooCommerce', 'Magento', 'Squarespace',
+    
+    // Project Management
+    'Microsoft Project', 'Primavera', 'Smartsheet', 'Monday.com', 'Basecamp',
+    'Wrike', 'ClickUp', 'Notion', 'Airtable', 'Miro', 'Lucidchart',
+    
+    // No Programming Experience
     'No Programming Experience', 'Others (Specify Below)'
   ];
 
   const interestSuggestions = [
-    // Main 10 Interest Categories
-    'Technology & Programming', 'Business & Management', 'Engineering & Technical',
-    'Healthcare & Medical', 'Arts & Creative', 'Education & Learning',
-    'Science & Research', 'Finance & Accounting', 'Marketing & Communication',
+    // Technology & Programming
+    'Data Analysis & Visualization', 'Machine Learning & AI', 'Web Development',
+    'Mobile App Development', 'Cybersecurity', 'Cloud Computing', 'DevOps',
+    'UI/UX Design', 'Game Development', 'Blockchain & Cryptocurrency',
+    'IoT & Embedded Systems', 'Robotics', 'Software Engineering', 'Database Design',
+    'API Development', 'Microservices', 'System Architecture', 'Performance Optimization',
+    'Quality Assurance & Testing', 'Code Review & Best Practices', 'Open Source Development',
+    
+    // Business & Management
+    'Project Management', 'Business Analysis', 'Financial Technology', 'Digital Marketing',
+    'E-commerce', 'Social Media & Community Management', 'Business Strategy',
+    'Operations Management', 'Supply Chain Management', 'Human Resources',
+    'Customer Relationship Management', 'Sales & Business Development',
+    'Market Research & Analysis', 'Product Management', 'Consulting',
+    'Entrepreneurship & Startups', 'International Business', 'Corporate Finance',
+    'Investment Banking', 'Risk Management', 'Compliance & Regulatory Affairs',
+    
+    // Engineering & Technical
+    'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering',
+    'Chemical Engineering', 'Aerospace Engineering', 'Biomedical Engineering',
+    'Environmental Engineering', 'Industrial Engineering', 'Materials Science',
+    'Renewable Energy', 'Automotive Engineering', 'Manufacturing & Production',
+    'Quality Control', 'Safety Engineering', 'Structural Analysis',
+    'Thermodynamics', 'Fluid Mechanics', 'Control Systems', 'Signal Processing',
+    
+    // Healthcare & Medical
+    'Healthcare Technology', 'Medical Research', 'Public Health', 'Nursing',
+    'Pharmacy', 'Dentistry', 'Physical Therapy', 'Mental Health',
+    'Medical Device Development', 'Telemedicine', 'Health Informatics',
+    'Epidemiology', 'Clinical Research', 'Medical Imaging', 'Biotechnology',
+    'Pharmaceutical Development', 'Healthcare Administration', 'Patient Care',
+    'Medical Education', 'Health Policy', 'Global Health',
+    
+    // Arts & Creative
+    'Photography & Video Editing', 'Music & Audio Production', 'Writing & Communication',
+    'Content Creation', 'Graphic Design', 'Illustration', 'Animation',
+    'Film & Video Production', 'Podcasting', 'Creative Writing', 'Journalism',
+    'Fashion Design', 'Interior Design', 'Architecture', 'Fine Arts',
+    'Digital Art', '3D Modeling', 'Game Art', 'Web Design', 'Brand Design',
+    'Typography', 'Color Theory', 'User Experience Design',
+    
+    // Education & Learning
+    'Education Technology', 'Teaching & Training', 'Curriculum Development',
+    'Educational Research', 'Online Learning', 'Language Learning',
+    'Special Education', 'Early Childhood Education', 'Higher Education',
+    'Educational Psychology', 'Learning Analytics', 'Instructional Design',
+    'Educational Assessment', 'Student Affairs', 'Academic Research',
+    'Educational Policy', 'International Education', 'Adult Education',
+    
+    // Science & Research
+    'Research & Analytics', 'Scientific Research', 'Laboratory Work',
+    'Data Science', 'Statistics', 'Mathematics', 'Physics', 'Chemistry',
+    'Biology', 'Environmental Science', 'Geology', 'Astronomy', 'Psychology',
+    'Sociology', 'Anthropology', 'Political Science', 'Economics',
+    'History', 'Philosophy', 'Linguistics', 'Archaeology', 'Geography',
+    
+    // Legal & Compliance
+    'Law & Legal Studies', 'Corporate Law', 'Criminal Law', 'Intellectual Property',
+    'Contract Law', 'Immigration Law', 'Family Law', 'Environmental Law',
+    'International Law', 'Legal Research', 'Paralegal Studies', 'Court Reporting',
+    'Legal Technology', 'Compliance', 'Regulatory Affairs', 'Ethics',
+    'Legal Writing', 'Mediation', 'Arbitration', 'Legal Consulting',
+    
+    // Finance & Accounting
+    'Accounting', 'Financial Planning', 'Investment Analysis', 'Banking',
+    'Insurance', 'Tax Planning', 'Auditing', 'Corporate Finance',
+    'Personal Finance', 'Real Estate', 'Financial Modeling', 'Trading',
+    'Portfolio Management', 'Risk Assessment', 'Financial Reporting',
+    'Cost Accounting', 'Management Accounting', 'Forensic Accounting',
+    'International Finance', 'Fintech', 'Cryptocurrency & Blockchain',
+    
+    // Marketing & Communication
+    'Digital Marketing', 'Content Marketing', 'Social Media Marketing',
+    'Search Engine Optimization (SEO)', 'Search Engine Marketing (SEM)',
+    'Email Marketing', 'Influencer Marketing', 'Brand Management',
+    'Public Relations', 'Advertising', 'Market Research', 'Consumer Behavior',
+    'Marketing Analytics', 'Event Planning', 'Public Speaking', 'Copywriting',
+    'Technical Writing', 'Translation', 'Interpretation', 'Media Relations',
+    
+    // Agriculture & Environment
+    'Sustainable Agriculture', 'Environmental Conservation', 'Climate Change',
+    'Renewable Energy', 'Water Management', 'Soil Science', 'Crop Science',
+    'Animal Science', 'Forestry', 'Wildlife Conservation', 'Marine Biology',
+    'Environmental Policy', 'Green Technology', 'Waste Management',
+    'Biodiversity', 'Ecosystem Management', 'Environmental Impact Assessment',
+    
+    // Hospitality & Tourism
+    'Hotel Management', 'Restaurant Management', 'Event Management',
+    'Tourism Development', 'Travel Planning', 'Customer Service',
+    'Culinary Arts', 'Food & Beverage Management', 'Hospitality Marketing',
+    'Convention Management', 'Resort Management', 'Airline Management',
+    'Cruise Line Management', 'Adventure Tourism', 'Cultural Tourism',
+    
+    // Sports & Fitness
+    'Sports Management', 'Fitness Training', 'Physical Education',
+    'Sports Medicine', 'Athletic Training', 'Sports Psychology',
+    'Sports Marketing', 'Recreation Management', 'Exercise Science',
+    'Nutrition', 'Wellness Coaching', 'Sports Analytics', 'Sports Broadcasting',
+    'Sports Journalism', 'Youth Sports', 'Adaptive Sports',
+    
+    // Social Work & Community
+    'Social Work', 'Community Development', 'Non-profit Management',
+    'Social Services', 'Crisis Intervention', 'Family Services',
+    'Child Welfare', 'Elder Care', 'Disability Services', 'Mental Health Counseling',
+    'Substance Abuse Counseling', 'Community Outreach', 'Volunteer Management',
+    'Grant Writing', 'Program Development', 'Policy Advocacy',
+    
+    // Transportation & Logistics
+    'Supply Chain Management', 'Logistics', 'Transportation Planning',
+    'Fleet Management', 'Warehouse Management', 'Inventory Management',
+    'Procurement', 'International Trade', 'Customs & Compliance',
+    'Freight Forwarding', 'Shipping & Receiving', 'Distribution Management',
+    'Third-Party Logistics', 'Reverse Logistics', 'Cold Chain Management',
+    
+    // Real Estate & Construction
+    'Real Estate Development', 'Property Management', 'Real Estate Sales',
+    'Construction Management', 'Architecture', 'Urban Planning',
+    'Landscape Architecture', 'Building Inspection', 'Real Estate Appraisal',
+    'Commercial Real Estate', 'Residential Real Estate', 'Real Estate Investment',
+    'Property Valuation', 'Real Estate Law', 'Construction Technology',
+    
+    // Media & Entertainment
+    'Broadcasting', 'Journalism', 'Media Production', 'Television Production',
+    'Radio Production', 'Podcasting', 'Streaming Media', 'Social Media Management',
+    'Content Strategy', 'Media Relations', 'Entertainment Law', 'Talent Management',
+    'Event Production', 'Live Streaming', 'Digital Media', 'Media Analytics',
+    
+    // Others & Custom
     'Others (Specify Below)'
   ];
 
@@ -301,94 +501,107 @@ function CareerForm({ onSubmit, isLoading }: CareerFormProps) {
   };
 
   return (
-    <div ref={formRef} className="card-modern p-2xl max-w-4xl mx-auto scroll-reveal">
-      <div ref={headerRef} className="text-center mb-12 scroll-reveal">
-        <div className="inline-block p-6 bg-gradient-primary rounded-3xl shadow-glow-lg mb-8 animate-float">
-          <FaMagic className="text-4xl text-white" />
-        </div>
-        <h2 className="text-headline text-gradient mb-4">
+    <div className="bg-white p-8 max-w-4xl mx-auto border-2 border-gray-200 shadow-lg">
+      <div className="text-center mb-8">
+        <h2 className="text-mono-title mb-4">
           Discover Your Career Path
         </h2>
-        <p className="text-body text-neutral-600 max-w-2xl mx-auto">
-          Tell us about yourself, and we'll create a personalized roadmap for your dream career. 
-          Our AI will analyze your interests and suggest the perfect path forward.
+        <p className="text-mono-body">
+          Tell us about yourself, and we'll create a personalized roadmap for your dream career.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Basic Details Row */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <label htmlFor="grade" className="block text-subheadline text-neutral-800 flex items-center">
-              <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center mr-4">
-                <FaGraduationCap className="text-white text-lg" />
-              </div>
-              Education Level
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="grade" className="block text-mono-body font-semibold mb-3 text-lg flex items-center">
+              <FaGraduationCap className="mr-2" />
+              Current Education Level
             </label>
-            <select
-              id="grade"
-              value={grade}
-              onChange={(e) => setGrade(e.target.value)}
-              className="input-modern"
-              required
-            >
-              <option value="">Select education level</option>
-              {grades.map((gradeOption) => (
-                <option key={gradeOption.value} value={gradeOption.value}>
-                  {gradeOption.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="grade"
+                value={grade}
+                onChange={(e) => setGrade(e.target.value)}
+                className="w-full text-lg py-4 px-6 bg-white border-2 border-gray-200 shadow-md focus:border-gray-400 focus:shadow-lg transition-all duration-200 hover:border-gray-300 hover:shadow-lg appearance-none cursor-pointer"
+                required
+              >
+                <option value="">Select your education level</option>
+                {grades.map((gradeOption) => (
+                  <option key={gradeOption.value} value={gradeOption.value} className="py-3 text-lg">
+                    {gradeOption.label}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <label htmlFor="experience" className="block text-subheadline text-neutral-800 flex items-center">
-              <div className="w-10 h-10 bg-gradient-secondary rounded-xl flex items-center justify-center mr-4">
-                <FaChartBar className="text-white text-lg" />
-              </div>
+          <div className="space-y-2">
+            <label htmlFor="experience" className="block text-mono-body font-semibold mb-3 text-lg flex items-center">
+              <FaChartBar className="mr-2" />
               Experience Level
             </label>
-            <select
-              id="experience"
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
-              className="input-modern"
-              required
-            >
-              <option value="">Select experience level</option>
-              {experienceLevels.map((level) => (
-                <option key={level.value} value={level.value}>
-                  {level.label}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                id="experience"
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+                className="w-full text-lg py-4 px-6 bg-white border-2 border-gray-200 shadow-md focus:border-gray-400 focus:shadow-lg transition-all duration-200 hover:border-gray-300 hover:shadow-lg appearance-none cursor-pointer"
+                required
+              >
+                <option value="">Select your experience level</option>
+                {experienceLevels.map((level) => (
+                  <option key={level.value} value={level.value} className="py-3 text-lg">
+                    {level.label}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Career Domain Selection */}
         <div className="space-y-2">
-          <label htmlFor="domain" className="block text-sm font-medium text-gray-700 flex items-center">
-            <FaBullseye className="mr-2 text-gray-500" />
-            Career Domain (Optional)
+          <label htmlFor="domain" className="block text-mono-body font-semibold mb-3 text-lg flex items-center">
+            <FaBullseye className="mr-2" />
+            Interested Career Domain (Optional)
           </label>
-          <select
-            id="domain"
-            value={selectedDomain}
-            onChange={(e) => handleDomainChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">Let AI choose the best domain for me</option>
-            {domains.map((domain) => (
-              <option key={domain.value} value={domain.value}>
-                {domain.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="domain"
+              value={selectedDomain}
+              onChange={(e) => handleDomainChange(e.target.value)}
+              className="w-full text-lg py-4 px-6 bg-white border-2 border-gray-200 shadow-md focus:border-gray-400 focus:shadow-lg transition-all duration-200 hover:border-gray-300 hover:shadow-lg appearance-none cursor-pointer"
+            >
+              <option value="">Let AI choose the best domain for me</option>
+              {domains.map((domain) => (
+                <option key={domain.value} value={domain.value} className="py-3 text-lg">
+                  {domain.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+              <svg className="w-6 h-6 text-mono-grey-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
           
           {/* Custom Domain Input */}
           {showCustomDomainInput && (
-            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
-              <label htmlFor="customDomain" className="block text-sm font-medium text-blue-800 mb-2">
+            <div className="mt-4 p-4 bg-purple-50 border-2 border-purple-200 rounded-lg">
+              <label htmlFor="customDomain" className="block text-sm font-medium text-purple-800 mb-2">
                 Specify your custom career domain:
               </label>
               <input
@@ -396,33 +609,36 @@ function CareerForm({ onSubmit, isLoading }: CareerFormProps) {
                 type="text"
                 value={customDomain}
                 onChange={(e) => setCustomDomain(e.target.value)}
-                placeholder="Enter your specific career domain"
-                className="w-full px-3 py-2 border border-blue-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                placeholder="Enter your specific career domain (e.g., Quantum Computing, Space Technology, etc.)"
+                className="w-full p-3 border border-purple-300 rounded-md focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200"
               />
+              <p className="text-xs text-purple-600 mt-2">
+                💡 Tip: Enter a specific career domain that isn't listed above.
+              </p>
             </div>
           )}
           
-          <p className="text-xs text-gray-500">
+          <p className="text-mono-caption mt-3 text-sm text-mono-grey-600">
             Leave blank to let our AI analyze your interests and choose the best domain
           </p>
         </div>
 
         {/* Programming Skills Section */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
-            <FaLaptopCode className="mr-2 text-gray-500" />
+          <label className="block text-mono-body font-medium mb-4 flex items-center">
+            <FaLaptopCode className="mr-2" />
             Programming Languages & Technologies
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {programmingLanguages.map((skill) => (
               <button
                 key={skill}
                 type="button"
                 onClick={() => handleSkillToggle(skill)}
-                className={`px-3 py-2 text-sm font-medium rounded-md border transition-colors ${
+                className={`p-3 text-sm font-medium transition-all duration-200 border-2 shadow-sm ${
                   selectedSkills.includes(skill)
-                    ? 'bg-blue-50 border-blue-300 text-blue-700'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+                    ? 'bg-blue-50 border-blue-300 text-blue-700 shadow-md'
+                    : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:shadow-md'
                 }`}
               >
                 {skill}
@@ -432,38 +648,41 @@ function CareerForm({ onSubmit, isLoading }: CareerFormProps) {
           
           {/* Custom Skills Input */}
           {showCustomSkillsInput && (
-            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
               <label htmlFor="customSkills" className="block text-sm font-medium text-blue-800 mb-2">
-                Specify your custom skills:
+                Specify your custom skills or technologies:
               </label>
               <textarea
                 id="customSkills"
                 value={customSkills}
                 onChange={(e) => setCustomSkills(e.target.value)}
-                placeholder="Enter your skills separated by commas"
-                className="w-full px-3 py-2 border border-blue-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"
-                rows={2}
+                placeholder="Enter your skills separated by commas (e.g., AutoCAD, SolidWorks, SAP, etc.)"
+                className="w-full p-3 border border-blue-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-none"
+                rows={3}
               />
+              <p className="text-xs text-blue-600 mt-2">
+                💡 Tip: Include any specialized tools, software, or technologies you know that aren't listed above.
+              </p>
             </div>
           )}
         </div>
 
         {/* Interests Section */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
-            <FaLightbulb className="mr-2 text-gray-500" />
+          <label className="block text-mono-body font-medium mb-4 flex items-center">
+            <FaLightbulb className="mr-2" />
             What are your interests and passions?
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
             {interestSuggestions.map((interest) => (
               <button
                 key={interest}
                 type="button"
                 onClick={() => handleInterestToggle(interest)}
-                className={`px-3 py-2 text-sm font-medium rounded-md border transition-colors ${
+                className={`p-3 text-sm font-medium transition-all duration-200 border-2 shadow-sm ${
                   selectedInterests.includes(interest)
-                    ? 'bg-green-50 border-green-300 text-green-700'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
+                    ? 'bg-green-50 border-green-300 text-green-700 shadow-md'
+                    : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:shadow-md'
                 }`}
               >
                 {interest}
@@ -473,18 +692,21 @@ function CareerForm({ onSubmit, isLoading }: CareerFormProps) {
           
           {/* Custom Interests Input */}
           {showCustomInterestsInput && (
-            <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-md">
+            <div className="mt-4 p-4 bg-green-50 border-2 border-green-200 rounded-lg mb-4">
               <label htmlFor="customInterests" className="block text-sm font-medium text-green-800 mb-2">
-                Specify your custom interests:
+                Specify your custom interests or passions:
               </label>
               <textarea
                 id="customInterests"
                 value={customInterests}
                 onChange={(e) => setCustomInterests(e.target.value)}
-                placeholder="Enter your interests separated by commas"
-                className="w-full px-3 py-2 border border-green-300 rounded-md focus:border-green-500 focus:ring-2 focus:ring-green-200 resize-none"
-                rows={2}
+                placeholder="Enter your interests separated by commas (e.g., Sustainable Fashion, Space Exploration, Community Service, etc.)"
+                className="w-full p-3 border border-green-300 rounded-md focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 resize-none"
+                rows={3}
               />
+              <p className="text-xs text-green-600 mt-2">
+                💡 Tip: Include any specific interests, hobbies, or passions that aren't listed above.
+              </p>
             </div>
           )}
           
@@ -492,31 +714,28 @@ function CareerForm({ onSubmit, isLoading }: CareerFormProps) {
             value={interests}
             onChange={(e) => setInterests(e.target.value)}
             placeholder="Or describe your interests in your own words..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-            rows={3}
+            className="w-full p-4 border-2 border-gray-200 shadow-md focus:border-gray-400 focus:shadow-lg transition-all duration-200 hover:border-gray-300 hover:shadow-md resize-none"
+            rows={4}
           />
         </div>
 
-        <div className="text-center pt-6">
-          <button
-            type="submit"
-            disabled={isLoading || (selectedInterests.length === 0 && !interests.trim() && !customInterests.trim()) || (selectedSkills.length === 0 && !customSkills.trim()) || !grade || !experience}
-            className="btn-primary btn-xl w-full max-w-md mx-auto disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center space-x-3">
-                <div className="loader"></div>
-                <span>Generating roadmap...</span>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center space-x-3">
-                <FaRocket className="text-xl" />
-                <span>Generate My Career Roadmap</span>
-                <FaStar className="text-xl" />
-              </div>
-            )}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={isLoading || (selectedInterests.length === 0 && !interests.trim() && !customInterests.trim()) || (selectedSkills.length === 0 && !customSkills.trim()) || !grade || !experience}
+          className="w-full py-4 px-6 text-lg font-semibold bg-blue-600 text-white border-2 border-blue-600 shadow-lg hover:bg-blue-700 hover:border-blue-700 hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400"
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center space-x-3">
+              <div className="mono-loader-large"></div>
+              <span>Generating your personalized roadmap...</span>
+            </div>
+          ) : (
+            <>
+              <FaRocket className="mr-2" />
+              Generate My Career Roadmap
+            </>
+          )}
+        </button>
       </form>
 
     </div>

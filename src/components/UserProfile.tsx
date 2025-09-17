@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserProfile as UserProfileType, Certificate } from '../types/professional';
 
 interface UserProfileProps {
@@ -25,6 +25,26 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
       twitter: profile.socialLinks.twitter || ''
     }
   });
+
+  // Keep local edit form in sync with the latest profile prop
+  useEffect(() => {
+    setEditData({
+      name: profile.name,
+      title: profile.title,
+      location: profile.location,
+      bio: profile.bio,
+      skills: profile.skills.join(', '),
+      isAvailableForHire: profile.isAvailableForHire,
+      expectedSalary: profile.expectedSalary || '',
+      preferredLocation: profile.preferredLocation || '',
+      socialLinks: {
+        linkedin: profile.socialLinks.linkedin || '',
+        github: profile.socialLinks.github || '',
+        portfolio: profile.socialLinks.portfolio || '',
+        twitter: profile.socialLinks.twitter || ''
+      }
+    });
+  }, [profile]);
 
   const handleSave = () => {
     if (onUpdateProfile) {
@@ -63,30 +83,30 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-8">
       {/* Profile Header */}
-      <div className="card-mono p-mono-xl">
-        <div className="flex items-start space-x-6">
+      <div className="rounded-2xl p-6 border shadow-sm" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
+        <div className="flex flex-col md:flex-row md:items-start md:space-x-6 space-y-6 md:space-y-0">
           <div className="relative">
             <div 
-              className="w-20 h-20 flex items-center justify-center shadow-mono"
+              className="w-24 h-24 rounded-2xl overflow-hidden flex items-center justify-center shadow-mono"
               style={{ background: 'var(--mono-black)' }}
             >
               {profile.profileImage ? (
                 <img 
                   src={profile.profileImage} 
                   alt={profile.name}
-                  className="w-20 h-20 object-cover"
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-2xl text-white font-bold">
+                <span className="text-3xl text-white font-bold">
                   {profile.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </span>
               )}
             </div>
             {profile.isAvailableForHire && (
               <div 
-                className="absolute -bottom-1 -right-1 text-white text-xs px-2 py-1 font-medium shadow-mono"
+                className="absolute -bottom-2 -right-2 text-white text-xs px-2 py-1 font-medium rounded-md"
                 style={{ background: 'var(--mono-grey-700)' }}
               >
                 Available
@@ -95,87 +115,93 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
           </div>
 
           <div className="flex-1">
-            <div className="flex justify-between items-start">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
               <div>
                 <h1 className="text-mono-title">{profile.name}</h1>
-                <p className="text-mono-headline" style={{ color: 'var(--mono-grey-600)' }}>{profile.title}</p>
-                <p className="text-mono-body" style={{ color: 'var(--mono-grey-500)' }}>{profile.location}</p>
+                <p className="text-mono-headline mt-1" style={{ color: 'var(--mono-grey-600)' }}>{profile.title}</p>
+                <p className="text-mono-body mt-1" style={{ color: 'var(--mono-grey-500)' }}>{profile.location}</p>
               </div>
-              
               {isOwnProfile && (
-                <button
-                  onClick={() => setIsEditing(!isEditing)}
-                  className="btn-mono"
-                >
-                  {isEditing ? 'Cancel' : 'Edit Profile'}
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors ${
+                      isEditing
+                        ? 'bg-white text-mono-black' 
+                        : 'text-white'
+                    }`}
+                    style={{ background: isEditing ? 'transparent' : 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+                  >
+                    {isEditing ? 'Cancel' : 'Edit Profile'}
+                  </button>
+                </div>
               )}
             </div>
-
-            <div className="mt-4">
-              <div className="flex items-center space-x-4 text-mono-caption">
-                <span>Experience: {profile.experience}</span>
-                <span>Education: {profile.education}</span>
-                <span>Joined: {formatDate(profile.createdAt)}</span>
-              </div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-mono-caption">
+              <div className="rounded-md px-3 py-2 border" style={{ borderColor: 'var(--mono-grey-200)' }}>Experience: <span className="font-medium">{profile.experience}</span></div>
+              <div className="rounded-md px-3 py-2 border" style={{ borderColor: 'var(--mono-grey-200)' }}>Education: <span className="font-medium">{profile.education}</span></div>
+              <div className="rounded-md px-3 py-2 border" style={{ borderColor: 'var(--mono-grey-200)' }}>Joined: <span className="font-medium">{formatDate(profile.createdAt)}</span></div>
             </div>
+
+            {(profile.socialLinks.linkedin || profile.socialLinks.github || profile.socialLinks.portfolio || profile.socialLinks.twitter) && (
+              <div className="mt-6 flex flex-wrap gap-3">
+                {profile.socialLinks.linkedin && (
+                  <a
+                    href={profile.socialLinks.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 text-sm rounded-full border transition-colors"
+                    style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {profile.socialLinks.github && (
+                  <a
+                    href={profile.socialLinks.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 text-sm rounded-full border transition-colors"
+                    style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                  >
+                    GitHub
+                  </a>
+                )}
+                {profile.socialLinks.portfolio && (
+                  <a
+                    href={profile.socialLinks.portfolio}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 text-sm rounded-full border transition-colors"
+                    style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                  >
+                    Portfolio
+                  </a>
+                )}
+                {profile.socialLinks.twitter && (
+                  <a
+                    href={profile.socialLinks.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 text-sm rounded-full border transition-colors"
+                    style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                  >
+                    Twitter
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Social Links */}
-        {(profile.socialLinks.linkedin || profile.socialLinks.github || profile.socialLinks.portfolio || profile.socialLinks.twitter) && (
-          <div className="mt-6 flex space-x-4">
-            {profile.socialLinks.linkedin && (
-              <a
-                href={profile.socialLinks.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mono-black hover:text-mono-grey-700 transition-colors font-medium text-sm"
-              >
-                LinkedIn
-              </a>
-            )}
-            {profile.socialLinks.github && (
-              <a
-                href={profile.socialLinks.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mono-black hover:text-mono-grey-700 transition-colors font-medium text-sm"
-              >
-                GitHub
-              </a>
-            )}
-            {profile.socialLinks.portfolio && (
-              <a
-                href={profile.socialLinks.portfolio}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mono-black hover:text-mono-grey-700 transition-colors font-medium text-sm"
-              >
-                Portfolio
-              </a>
-            )}
-            {profile.socialLinks.twitter && (
-              <a
-                href={profile.socialLinks.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mono-black hover:text-mono-grey-700 transition-colors font-medium text-sm"
-              >
-                Twitter
-              </a>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Edit Form */}
       {isEditing && (
-        <div className="card-mono p-mono-xl">
+        <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
           <h2 className="text-mono-headline mb-6">Edit Profile</h2>
           
-          <div className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-mono-body font-medium mb-2">Full Name</label>
                 <input
@@ -197,7 +223,7 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-mono-body font-medium mb-2">Location</label>
                 <input
@@ -230,7 +256,7 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
               />
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-mono-body font-medium mb-2">Expected Salary</label>
                 <input
@@ -254,7 +280,7 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-mono-body font-medium mb-2">LinkedIn URL</label>
                 <input
@@ -282,7 +308,7 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-mono-body font-medium mb-2">Portfolio URL</label>
                 <input
@@ -323,16 +349,18 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
               </label>
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={handleSave}
-                className="btn-mono"
+                className="px-4 py-2 text-sm font-medium rounded-md border text-white"
+                style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
               >
                 Save Changes
               </button>
               <button
                 onClick={() => setIsEditing(false)}
-                className="btn-mono-outline"
+                className="px-4 py-2 text-sm font-medium rounded-md border"
+                style={{ background: 'transparent', borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
               >
                 Cancel
               </button>
@@ -343,22 +371,22 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
 
       {/* Bio */}
       {profile.bio && (
-        <div className="card-mono p-mono-xl">
+        <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
           <h2 className="text-mono-headline mb-4">About</h2>
           <p className="text-mono-body whitespace-pre-wrap">{profile.bio}</p>
         </div>
       )}
 
       {/* Skills */}
-      <div className="card-mono p-mono-xl">
+      <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
         <h2 className="text-mono-headline mb-4">Skills</h2>
         <div className="flex flex-wrap gap-2">
           {profile.skills.map((skill, index) => (
             <span 
               key={index} 
-              className="px-3 py-1 text-sm font-medium border"
+              className="px-3 py-1 text-sm font-medium rounded-full border"
               style={{ 
-                background: 'var(--mono-grey-100)', 
+                background: 'white', 
                 color: 'var(--mono-grey-800)',
                 borderColor: 'var(--mono-grey-200)'
               }}
@@ -370,31 +398,31 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
       </div>
 
       {/* Experience Level */}
-      <div className="card-mono p-mono-xl">
+      <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
         <h2 className="text-mono-headline mb-4">Experience Level</h2>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center flex-wrap gap-3">
           <span 
-            className="px-3 py-1 text-sm text-white font-medium"
+            className="px-3 py-1 text-sm text-white font-medium rounded-full"
             style={{ background: getExperienceColor(profile.experience) }}
           >
             {profile.experience}
           </span>
-          <span className="text-mono-caption">Education: {profile.education}</span>
+          <span className="text-mono-caption rounded-md px-2 py-1 border" style={{ borderColor: 'var(--mono-grey-200)' }}>Education: {profile.education}</span>
         </div>
       </div>
 
       {/* Certificates */}
       {profile.certificates.length > 0 && (
-        <div className="card-mono p-mono-xl">
+        <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
           <h2 className="text-mono-headline mb-4">Certificates & Achievements</h2>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-6">
             {profile.certificates.map((certificate) => (
-              <div key={certificate.id} className="p-4 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
+              <div key={certificate.id} className="p-5 rounded-xl border hover:shadow-sm transition-shadow" style={{ background: 'white', borderColor: 'var(--mono-grey-200)' }}>
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="font-semibold text-mono-grey-900">{certificate.title}</h3>
                   {certificate.verified && (
                     <span 
-                      className="text-white text-xs px-2 py-1 font-medium"
+                      className="text-white text-xs px-2 py-1 font-medium rounded"
                       style={{ background: 'var(--mono-grey-700)' }}
                     >
                       ✓ Verified
@@ -406,12 +434,12 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
                   Issued: {new Date(certificate.issueDate).toLocaleDateString()}
                 </p>
                 {certificate.skills.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {certificate.skills.slice(0, 3).map((skill, index) => (
                       <span 
                         key={index} 
-                        className="px-2 py-1 text-xs font-medium"
-                        style={{ background: 'var(--mono-grey-200)', color: 'var(--mono-grey-700)' }}
+                        className="px-2.5 py-1 text-xs font-medium rounded-full border"
+                        style={{ background: 'white', color: 'var(--mono-grey-800)', borderColor: 'var(--mono-grey-200)' }}
                       >
                         {skill}
                       </span>
@@ -429,14 +457,14 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
 
       {/* Learning Progress */}
       {profile.completedRoadmaps.length > 0 && (
-        <div className="card-mono p-mono-xl">
+        <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
           <h2 className="text-mono-headline mb-4">Completed Learning Paths</h2>
           <div className="flex flex-wrap gap-2">
             {profile.completedRoadmaps.map((roadmap, index) => (
               <span 
                 key={index} 
-                className="px-3 py-1 text-sm font-medium text-white"
-                style={{ background: 'var(--mono-black)' }}
+                className="px-3 py-1 text-sm font-medium rounded-full border text-white"
+                style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
               >
                 {roadmap}
               </span>
@@ -447,14 +475,14 @@ function UserProfile({ profile, isOwnProfile = false, onUpdateProfile }: UserPro
 
       {/* Currently Learning */}
       {profile.currentLearning.length > 0 && (
-        <div className="card-mono p-mono-xl">
+        <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
           <h2 className="text-mono-headline mb-4">Currently Learning</h2>
           <div className="flex flex-wrap gap-2">
             {profile.currentLearning.map((topic, index) => (
               <span 
                 key={index} 
-                className="px-3 py-1 text-sm font-medium text-white"
-                style={{ background: 'var(--mono-grey-700)' }}
+                className="px-3 py-1 text-sm font-medium rounded-full border text-white"
+                style={{ background: 'var(--mono-grey-700)', borderColor: 'var(--mono-grey-700)' }}
               >
                 {topic}
               </span>

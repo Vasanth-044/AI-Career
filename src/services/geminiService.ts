@@ -11,15 +11,14 @@ export interface GeminiResponse {
   }>;
 }
 
-export async function generateGeminiResponse(userMessage: string, context?: string): Promise<string> {
+export async function generateGeminiResponse(userMessage: string): Promise<string> {
   if (!isGeminiConfigured()) {
     return "I'm sorry, but I need a valid Gemini API key to provide AI-powered responses. Please create a .env file in the root directory and add: VITE_GEMINI_API_KEY=your_actual_api_key_here. You can get an API key from https://makersuite.google.com/app/apikey";
   }
 
   try {
-    const prompt = context 
-      ? `You are Vasanth, a career assistant. Context: ${context}. User message: ${userMessage}. Provide helpful career guidance, advice on job searching, skill development, interview preparation, networking, or any other career-related topics. Keep responses concise but informative.`
-      : `You are Vasanth, a career assistant. User message: ${userMessage}. Provide helpful career guidance, advice on job searching, skill development, interview preparation, networking, or any other career-related topics. Keep responses concise but informative.`;
+    // Pass the user's message verbatim to Gemini to mirror its output exactly
+    const prompt = userMessage;
 
     const requestBody = {
       contents: [{

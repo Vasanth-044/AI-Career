@@ -2,20 +2,19 @@ import { Link } from 'react-router-dom';
 import { CareerRoadmap } from '../types/career';
 import { 
   FaBullseye, 
+  FaGraduationCap, 
+  FaRocket, 
   FaBriefcase, 
   FaBuilding, 
   FaFileAlt,
-  FaPlay,
-  FaCode,
-  FaTasks,
-  FaChevronDown,
-  FaChevronRight,
   FaDownload,
-  FaEye
+  FaFileCode,
+  FaGift,
+  FaGem,
+  FaPlay,
+  FaTachometerAlt,
+  FaArrowRight
 } from 'react-icons/fa';
-import { useState } from 'react';
-import DailyCodingTasks from './DailyCodingTasks';
-import CodingCompiler from './CodingCompiler';
 
 interface RoadmapDisplayProps {
   roadmap: CareerRoadmap;
@@ -27,19 +26,10 @@ interface RoadmapDisplayProps {
 }
 
 function RoadmapDisplay({ roadmap, onStartOver, userDetails }: RoadmapDisplayProps) {
-  const [showDailyTasks, setShowDailyTasks] = useState(false);
-  const [showCompiler, setShowCompiler] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('JavaScript');
-  const [selectedPhase, setSelectedPhase] = useState('Beginner');
-  const [showJsonPreview, setShowJsonPreview] = useState(false);
-  const [expandedPhases, setExpandedPhases] = useState<Set<number>>(new Set([0]));
-
-  const togglePhase = (idx: number) => {
-    setExpandedPhases(prev => {
-      const next = new Set(prev);
-      if (next.has(idx)) next.delete(idx); else next.add(idx);
-      return next;
-    });
+  const phaseColors = {
+    'Beginner': 'from-green-500 to-emerald-600',
+    'Intermediate': 'from-yellow-500 to-orange-600',
+    'Advanced': 'from-purple-500 to-indigo-600'
   };
 
   const downloadRoadmap = () => {
@@ -127,77 +117,86 @@ ${JSON.stringify(roadmap, null, 2)}
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Minimal Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
-          <FaBullseye className="text-gray-600" />
-          {roadmap.domain}
-        </h1>
+      {/* Header */}
+      <div className="text-center mb-12">
+        <div className="inline-flex items-center space-x-2 bg-white px-6 py-3 rounded-full border border-gray-200 shadow-soft mb-6">
+          <FaBullseye className="text-2xl text-blue-600" />
+          <span className="text-xl font-bold text-gray-800">{roadmap.domain}</span>
+        </div>
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">Your Career Roadmap</h2>
+        
+        {/* User Details Summary */}
         {userDetails && (
-          <p className="text-sm text-gray-600 mt-2">
-            {userDetails.grade} · {userDetails.experience}
-          </p>
+          <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-md mx-auto mb-6 shadow-soft">
+            <div className="flex justify-center space-x-6 text-sm">
+              <div className="text-center">
+                <span className="block text-gray-500">Education Level</span>
+                <span className="font-medium text-gray-800">{userDetails.grade}</span>
+              </div>
+              <div className="text-center">
+                <span className="block text-gray-500">Experience</span>
+                <span className="font-medium text-gray-800">{userDetails.experience}</span>
+              </div>
+            </div>
+          </div>
         )}
-        <div className="flex flex-wrap items-center gap-2 mt-4">
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
           <button
             onClick={onStartOver}
-            className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+            className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-soft"
           >
-            Start over
+            ← Start Over
           </button>
-          <Link to="/dashboard" className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-            Go to dashboard
+          <Link
+            to="/dashboard"
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-soft"
+          >
+            <FaTachometerAlt />
+            <span>Go to Dashboard</span>
+            <FaArrowRight />
           </Link>
-          <div className="h-5 w-px bg-gray-200 mx-1" />
-          <button 
-            onClick={() => setShowDailyTasks(true)}
-            className="px-3 py-1.5 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
+          <button
+            onClick={downloadRoadmap}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-soft"
           >
-            <FaTasks className="text-xs" />
-            Daily tasks
+            <FaDownload />
+            <span>Download Roadmap</span>
           </button>
-          <button 
-            onClick={() => setShowCompiler(true)}
-            className="px-3 py-1.5 text-sm rounded-md bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2"
+          <button
+            onClick={downloadJSON}
+            className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-soft"
           >
-            <FaCode className="text-xs" />
-            Open compiler
-          </button>
-          <div className="h-5 w-px bg-gray-200 mx-1" />
-          <button onClick={downloadRoadmap} className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-            <FaDownload className="text-xs" />
-            Download text
-          </button>
-          <button onClick={() => setShowJsonPreview(true)} className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-            <FaEye className="text-xs" />
-            Preview JSON
-          </button>
-          <button onClick={downloadJSON} className="px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-            Download JSON
+            <FaFileCode />
+            <span>Download JSON</span>
           </button>
         </div>
       </div>
 
-      {/* Roadmap Phases - minimal cards */}
-      <div className="space-y-6 mb-10">
+      {/* Roadmap Phases */}
+      <div className="space-y-8 mb-12">
         {roadmap.roadmap.map((phase, index) => (
-          <div key={phase.phase} className="border border-gray-200 rounded-md overflow-hidden">
-            <button onClick={() => togglePhase(index)} className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex items-center justify-between">
-              <h3 className="text-base font-medium text-gray-900 flex items-center gap-2">
-                {expandedPhases.has(index) ? <FaChevronDown className="text-gray-500" /> : <FaChevronRight className="text-gray-500" />}
-                {index + 1}. {phase.phase}
+          <div key={phase.phase} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-soft-lg">
+            <div className={`bg-gradient-to-r ${phaseColors[phase.phase as keyof typeof phaseColors]} px-6 py-4`}>
+              <h3 className="text-xl font-bold text-white flex items-center">
+                <span className="bg-white bg-opacity-20 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm font-bold">
+                  {index + 1}
+                </span>
+                {phase.phase} Phase
               </h3>
-              <span className="text-xs text-gray-500">{phase.skills.length} skills · {phase.projects.length} projects</span>
-            </button>
-            {expandedPhases.has(index) && (
-            <>
-            <div className="p-4 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            </div>
+            
+            <div className="p-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Skills */}
               <div>
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Skills</h4>
-                <ul className="space-y-1">
+                <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <FaGraduationCap className="mr-2 text-blue-600" />
+                  Skills to Learn
+                </h4>
+                <ul className="space-y-2">
                   {phase.skills.map((skill, i) => (
-                    <li key={i} className="text-sm text-gray-700">
+                    <li key={i} className="text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
                       {skill}
                     </li>
                   ))}
@@ -206,13 +205,21 @@ ${JSON.stringify(roadmap, null, 2)}
 
               {/* Free Resources */}
               <div>
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Free resources</h4>
-                <ul className="space-y-1">
+                <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <FaGift className="mr-2 text-green-600" />
+                  Free Resources
+                </h4>
+                <ul className="space-y-2">
                   {phase.free_resources.map((resource, i) => {
                     const { url, name } = parseResource(resource);
                     return (
-                      <li key={i} className="text-sm">
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline hover:text-blue-800">
+                      <li key={i}>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full block transition-colors underline border border-blue-200"
+                        >
                           {name}
                         </a>
                       </li>
@@ -223,13 +230,21 @@ ${JSON.stringify(roadmap, null, 2)}
 
               {/* Paid Resources */}
               <div>
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Paid resources</h4>
-                <ul className="space-y-1">
+                <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <FaGem className="mr-2 text-purple-600" />
+                  Paid Resources
+                </h4>
+                <ul className="space-y-2">
                   {phase.paid_resources.map((resource, i) => {
                     const { url, name } = parseResource(resource);
                     return (
-                      <li key={i} className="text-sm">
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-purple-700 underline hover:text-purple-900">
+                      <li key={i}>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100 px-3 py-1 rounded-full block transition-colors underline border border-purple-200"
+                        >
                           {name}
                         </a>
                       </li>
@@ -240,10 +255,13 @@ ${JSON.stringify(roadmap, null, 2)}
 
               {/* Projects */}
               <div>
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Projects</h4>
-                <ul className="space-y-1">
+                <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
+                  <FaRocket className="mr-2 text-green-600" />
+                  Project Ideas
+                </h4>
+                <ul className="space-y-2">
                   {phase.projects.map((project, i) => (
-                    <li key={i} className="text-sm text-gray-700">
+                    <li key={i} className="text-sm text-gray-700 bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
                       {project}
                     </li>
                   ))}
@@ -251,163 +269,101 @@ ${JSON.stringify(roadmap, null, 2)}
               </div>
             </div>
 
-            {/* YouTube Videos - minimal list */}
+            {/* YouTube Videos Section */}
             {phase.youtube_videos && phase.youtube_videos.length > 0 && (
-              <div className="px-4 pb-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
-                  <FaPlay className="text-gray-600" /> Videos
+              <div className="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                  <FaPlay className="mr-2 text-red-600" />
+                  Recommended YouTube Videos
                 </h4>
-                <ul className="space-y-1">
+                <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-4">
                   {phase.youtube_videos.map((video, i) => (
-                    <li key={i} className="text-sm">
-                      <a href={video.url} target="_blank" rel="noopener noreferrer" className="text-red-600 underline hover:text-red-700">
-                        {video.title}
-                      </a>
-                      <span className="text-gray-500"> — {video.channel}</span>
-                    </li>
+                    <div key={i} className="bg-white rounded-lg p-4 border border-gray-200 hover:border-red-300 transition-colors shadow-soft">
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center">
+                            <span className="text-white text-lg">▶</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h5 className="font-medium text-gray-800 text-sm line-clamp-2 mb-1">
+                            {video.title}
+                          </h5>
+                          <p className="text-gray-600 text-xs mb-2">{video.channel}</p>
+                          <div className="flex items-center space-x-2 text-xs text-gray-500 mb-2">
+                            <span>{video.duration}</span>
+                            <span>•</span>
+                            <span>{video.views} views</span>
+                          </div>
+                          <p className="text-gray-600 text-xs line-clamp-2 mb-3">
+                            {video.description}
+                          </p>
+                          <a
+                            href={video.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-red-600 hover:text-red-700 text-xs font-medium"
+                          >
+                            Watch on YouTube →
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
-            )}
-            </>
             )}
           </div>
         ))}
       </div>
 
-      {/* Career Information - minimal lists */}
-      <div className="grid md:grid-cols-3 gap-4">
+      {/* Career Information */}
+      <div className="grid md:grid-cols-3 gap-6">
         {/* Career Paths */}
-        <div className="border border-gray-200 rounded-md p-4">
-          <h3 className="text-base font-medium text-gray-900 mb-2 flex items-center gap-2">
-            <FaBriefcase className="text-gray-600" /> Career paths
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-soft">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <FaBriefcase className="mr-2 text-blue-600" />
+            Career Paths
           </h3>
-          <div className="space-y-1">
+          <div className="space-y-2">
             {roadmap.career_paths.map((path, i) => (
-              <div key={i} className="text-sm text-gray-700">{path}</div>
+              <div key={i} className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                <span className="font-medium text-gray-800">{path}</span>
+              </div>
             ))}
           </div>
         </div>
 
         {/* Companies */}
-        <div className="border border-gray-200 rounded-md p-4">
-          <h3 className="text-base font-medium text-gray-900 mb-2 flex items-center gap-2">
-            <FaBuilding className="text-gray-600" /> Top companies
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-soft">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <FaBuilding className="mr-2 text-green-600" />
+            Top Companies
           </h3>
-          <div className="space-y-1">
+          <div className="space-y-2">
             {roadmap.companies.map((company, i) => (
-              <div key={i} className="text-sm text-gray-700">{company}</div>
+              <div key={i} className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                <span className="font-medium text-gray-800">{company}</span>
+              </div>
             ))}
           </div>
         </div>
 
         {/* Interview Prep */}
-        <div className="border border-gray-200 rounded-md p-4">
-          <h3 className="text-base font-medium text-gray-900 mb-2 flex items-center gap-2">
-            <FaFileAlt className="text-gray-600" /> Interview prep
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-soft">
+          <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <FaFileAlt className="mr-2 text-purple-600" />
+            Interview Prep
           </h3>
-          <div className="space-y-1">
+          <div className="space-y-2">
             {roadmap.interview_prep.map((prep, i) => (
-              <div key={i} className="text-sm text-gray-700">{prep}</div>
+              <div key={i} className="bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                <span className="font-medium text-gray-800">{prep}</span>
+              </div>
             ))}
           </div>
         </div>
       </div>
-
-      {/* Daily Tasks Modal */}
-      {showDailyTasks && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg w-full max-w-4xl h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
-                  <FaTasks className="text-blue-600" />
-                  Daily Coding Tasks
-                </h2>
-                <button
-                  onClick={() => setShowDailyTasks(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-              
-              <div className="mb-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Programming Language</label>
-                    <select
-                      value={selectedLanguage}
-                      onChange={(e) => setSelectedLanguage(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    >
-                      <option value="JavaScript">JavaScript</option>
-                      <option value="Python">Python</option>
-                      <option value="Java">Java</option>
-                      <option value="C++">C++</option>
-                      <option value="C#">C#</option>
-                      <option value="Go">Go</option>
-                      <option value="Rust">Rust</option>
-                      <option value="PHP">PHP</option>
-                      <option value="Ruby">Ruby</option>
-                      <option value="Swift">Swift</option>
-                      <option value="Kotlin">Kotlin</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phase</label>
-                    <select
-                      value={selectedPhase}
-                      onChange={(e) => setSelectedPhase(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    >
-                      <option value="Beginner">Beginner</option>
-                      <option value="Intermediate">Intermediate</option>
-                      <option value="Advanced">Advanced</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <DailyCodingTasks
-                language={selectedLanguage}
-                phase={selectedPhase}
-                onOpenCompiler={(lang) => {
-                  setSelectedLanguage(lang);
-                  setShowDailyTasks(false);
-                  setShowCompiler(true);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Code Compiler Modal */}
-      {showCompiler && (
-        <CodingCompiler
-          language={selectedLanguage}
-          onClose={() => setShowCompiler(false)}
-        />
-      )}
-
-      {/* JSON Preview Modal */}
-      {showJsonPreview && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg w-full max-w-4xl h-[80vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-              <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                <FaFileAlt className="text-gray-600" /> Roadmap JSON (read-only)
-              </h3>
-              <button onClick={() => setShowJsonPreview(false)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
-            </div>
-            <pre className="flex-1 m-4 p-4 bg-gray-50 rounded text-xs text-gray-800 overflow-auto">{JSON.stringify(roadmap, null, 2)}</pre>
-            <div className="px-4 py-3 border-t border-gray-200 bg-gray-50 flex justify-end">
-              <button onClick={() => setShowJsonPreview(false)} className="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100">Close</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
