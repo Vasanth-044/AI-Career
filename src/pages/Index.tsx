@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import CareerForm from '../components/CareerForm';
 import RoadmapDisplay from '../components/RoadmapDisplay';
 import { generateCareerRoadmap } from '../services/careerMentor';
 import { CareerRoadmap, UserInput } from '../types/career';
-import { FaBullseye, FaArrowRight, FaTachometerAlt } from 'react-icons/fa';
 
 function Index() {
   const [roadmap, setRoadmap] = useState<CareerRoadmap | null>(null);
@@ -41,25 +39,13 @@ function Index() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <div className="mb-8">
-              <FaBullseye className="inline-block text-6xl mb-6 animate-mono-fade text-blue-600" />
+              <span className="inline-block text-6xl mb-6 animate-mono-fade">🎯</span>
               <h1 className="text-mono-large mb-6" style={{ color: 'var(--mono-black)' }}>
                 Career Platform
               </h1>
-              <p className="text-mono-body max-w-3xl mx-auto leading-relaxed mb-8" style={{ color: 'var(--mono-grey-700)' }}>
+              <p className="text-mono-body max-w-3xl mx-auto leading-relaxed" style={{ color: 'var(--mono-grey-700)' }}>
                 Build your professional profile and advance your career with our comprehensive platform.
               </p>
-              
-              {/* Quick Dashboard Access */}
-              <div className="flex justify-center">
-                <Link
-                  to="/dashboard"
-                  className="btn-mono inline-flex items-center space-x-2 hover:shadow-mono-lg transition-all duration-200"
-                >
-                  <FaTachometerAlt className="text-sm" />
-                  <span>Go to Dashboard</span>
-                  <FaArrowRight className="text-sm" />
-                </Link>
-              </div>
             </div>
           </div>
 
@@ -73,22 +59,12 @@ function Index() {
                 Join thousands of professionals who are advancing their careers with our platform. 
                 Add certificates, apply to jobs, and connect with employers.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  to="/dashboard"
-                  className="btn-mono inline-flex items-center justify-center space-x-2"
-                >
-                  <FaTachometerAlt className="text-sm" />
-                  <span>Access Dashboard</span>
-                  <FaArrowRight className="text-sm" />
-                </Link>
-                <Link
-                  to="/dashboard"
-                  className="btn-mono-secondary inline-flex items-center justify-center space-x-2"
-                >
-                  <span>Manage Profile</span>
-                </Link>
-              </div>
+              <a
+                href="/dashboard"
+                className="btn-mono inline-block"
+              >
+                Go to Dashboard →
+              </a>
             </div>
           </div>
         </div>

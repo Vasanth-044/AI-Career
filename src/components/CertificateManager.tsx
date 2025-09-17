@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Certificate } from '../types/professional';
-import { FaTrophy, FaEdit, FaTrash } from 'react-icons/fa';
 
 interface CertificateManagerProps {
   certificates: Certificate[];
@@ -108,13 +107,12 @@ function CertificateManager({
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-mono-headline">My Certificates</h2>
-          <p className="text-mono-body" style={{ color: 'var(--mono-grey-600)' }}>Manage your professional certifications and achievements</p>
+          <h2 className="text-2xl font-bold text-slate-100">My Certificates</h2>
+          <p className="text-slate-400">Manage your professional certifications and achievements</p>
         </div>
         <button
           onClick={() => setShowAddForm(true)}
-          className="px-4 py-2 text-sm font-medium rounded-md border text-white"
-          style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+          className="bg-slate-700 hover:bg-slate-600 text-slate-100 px-4 py-2 rounded-lg border border-slate-600 transition-colors"
         >
           + Add Certificate
         </button>
@@ -122,34 +120,34 @@ function CertificateManager({
 
       {/* Add/Edit Form */}
       {showAddForm && (
-        <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
-          <h3 className="text-mono-headline mb-4">
+        <div className="bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800 p-6">
+          <h3 className="text-xl font-bold text-slate-100 mb-4">
             {editingId ? 'Edit Certificate' : 'Add New Certificate'}
           </h3>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
                   Certificate Title *
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
                   Issuing Organization *
                 </label>
                 <select
                   value={formData.issuer}
                   onChange={(e) => setFormData({...formData, issuer: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                   required
                 >
                   <option value="">Select platform</option>
@@ -162,34 +160,34 @@ function CertificateManager({
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
                   Issue Date *
                 </label>
                 <input
                   type="date"
                   value={formData.issueDate}
                   onChange={(e) => setFormData({...formData, issueDate: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
                   Expiry Date (if applicable)
                 </label>
                 <input
                   type="date"
                   value={formData.expiryDate}
                   onChange={(e) => setFormData({...formData, expiryDate: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                 />
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
                   Credential ID
                 </label>
                 <input
@@ -197,12 +195,12 @@ function CertificateManager({
                   value={formData.credentialId}
                   onChange={(e) => setFormData({...formData, credentialId: e.target.value})}
                   placeholder="e.g., ABC123456"
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2">
                   Verification URL
                 </label>
                 <input
@@ -210,13 +208,13 @@ function CertificateManager({
                   value={formData.credentialUrl}
                   onChange={(e) => setFormData({...formData, credentialUrl: e.target.value})}
                   placeholder="https://..."
-                  className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+              <label className="block text-sm font-medium text-slate-300 mb-2">
                 Skills (comma-separated)
               </label>
               <input
@@ -224,12 +222,12 @@ function CertificateManager({
                 value={formData.skills}
                 onChange={(e) => setFormData({...formData, skills: e.target.value})}
                 placeholder="e.g., Python, Machine Learning, Data Analysis"
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+              <label className="block text-sm font-medium text-slate-300 mb-2">
                 Description
               </label>
               <textarea
@@ -237,7 +235,7 @@ function CertificateManager({
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 placeholder="Brief description of what you learned or achieved..."
                 rows={3}
-                className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500 resize-none"
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 resize-none"
               />
             </div>
 
@@ -247,18 +245,17 @@ function CertificateManager({
                 id="verified"
                 checked={formData.verified}
                 onChange={(e) => setFormData({...formData, verified: e.target.checked})}
-                className="w-4 h-4 text-mono-black bg-white border border-mono-grey-300 rounded focus:ring-mono-black focus:ring-1"
+                className="w-4 h-4 text-slate-600 bg-slate-800 border-slate-600 rounded focus:ring-slate-500"
               />
-              <label htmlFor="verified" className="text-sm" style={{ color: 'var(--mono-grey-700)' }}>
+              <label htmlFor="verified" className="text-sm text-slate-300">
                 This certificate is verified
               </label>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex space-x-3">
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium rounded-md border text-white"
-                style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+                className="bg-slate-700 hover:bg-slate-600 text-slate-100 px-4 py-2 rounded-lg border border-slate-600 transition-colors"
               >
                 {editingId ? 'Update Certificate' : 'Add Certificate'}
               </button>
@@ -279,8 +276,7 @@ function CertificateManager({
                     verified: false
                   });
                 }}
-                className="px-4 py-2 text-sm font-medium rounded-md border"
-                style={{ background: 'transparent', borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 transition-colors"
               >
                 Cancel
               </button>
@@ -292,35 +288,34 @@ function CertificateManager({
       {/* Certificates List */}
       <div className="space-y-4">
         {certificates.length === 0 ? (
-          <div className="text-center py-12 rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
-            <FaTrophy className="text-6xl mb-4" style={{ color: 'var(--mono-grey-500)' }} />
-            <h3 className="text-mono-headline mb-2">No certificates yet</h3>
-            <p className="text-mono-body mb-4" style={{ color: 'var(--mono-grey-600)' }}>Start building your professional profile by adding your first certificate!</p>
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🏆</div>
+            <h3 className="text-xl font-semibold text-slate-300 mb-2">No certificates yet</h3>
+            <p className="text-slate-500 mb-4">Start building your professional profile by adding your first certificate!</p>
             <button
               onClick={() => setShowAddForm(true)}
-              className="px-6 py-3 text-sm font-medium rounded-md border text-white"
-              style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+              className="bg-slate-700 hover:bg-slate-600 text-slate-100 px-6 py-3 rounded-lg border border-slate-600 transition-colors"
             >
               Add Your First Certificate
             </button>
           </div>
         ) : (
           certificates.map((certificate) => (
-            <div key={certificate.id} className="rounded-2xl p-6 border" style={{ background: 'white', borderColor: 'var(--mono-grey-200)' }}>
+            <div key={certificate.id} className="bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800 p-6">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold">{certificate.title}</h3>
+                    <h3 className="text-lg font-semibold text-slate-100">{certificate.title}</h3>
                     {certificate.verified && (
-                      <span className="text-white text-xs px-2 py-1 rounded-full" style={{ background: 'var(--mono-grey-700)' }}>
+                      <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
                         ✓ Verified
                       </span>
                     )}
                   </div>
                   
-                  <p className="text-mono-body mb-2" style={{ color: 'var(--mono-grey-700)' }}>{certificate.issuer}</p>
+                  <p className="text-slate-400 mb-2">{certificate.issuer}</p>
                   
-                  <div className="flex items-center space-x-4 text-sm" style={{ color: 'var(--mono-grey-600)' }}>
+                  <div className="flex items-center space-x-4 text-sm text-slate-500 mb-3">
                     <span>Issued: {formatDate(certificate.issueDate)}</span>
                     {certificate.expiryDate && (
                       <span>Expires: {formatDate(certificate.expiryDate)}</span>
@@ -334,7 +329,7 @@ function CertificateManager({
                     <div className="mb-3">
                       <div className="flex flex-wrap gap-2">
                         {certificate.skills.map((skill, index) => (
-                          <span key={index} className="px-2.5 py-1 text-xs font-medium rounded-full border" style={{ background: 'white', color: 'var(--mono-grey-800)', borderColor: 'var(--mono-grey-200)' }}>
+                          <span key={index} className="bg-slate-800 text-slate-300 px-2 py-1 rounded-full text-sm border border-slate-700">
                             {skill}
                           </span>
                         ))}
@@ -343,7 +338,7 @@ function CertificateManager({
                   )}
 
                   {certificate.description && (
-                    <p className="text-sm mb-3" style={{ color: 'var(--mono-grey-700)' }}>{certificate.description}</p>
+                    <p className="text-slate-400 text-sm mb-3">{certificate.description}</p>
                   )}
 
                   {certificate.credentialUrl && (
@@ -351,8 +346,7 @@ function CertificateManager({
                       href={certificate.credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline text-sm"
-                      style={{ color: 'var(--mono-grey-800)' }}
+                      className="text-slate-300 hover:text-slate-100 underline text-sm"
                     >
                       View Certificate →
                     </a>
@@ -362,19 +356,17 @@ function CertificateManager({
                 <div className="flex space-x-2 ml-4">
                   <button
                     onClick={() => handleEdit(certificate)}
-                    className="p-2 rounded-md border"
-                    style={{ color: 'var(--mono-grey-700)', borderColor: 'var(--mono-grey-200)' }}
+                    className="text-slate-400 hover:text-slate-200 p-2"
                     title="Edit certificate"
                   >
-                    <FaEdit />
+                    ✏️
                   </button>
                   <button
                     onClick={() => onDeleteCertificate(certificate.id)}
-                    className="p-2 rounded-md border"
-                    style={{ color: 'var(--mono-grey-700)', borderColor: 'var(--mono-grey-200)' }}
+                    className="text-slate-400 hover:text-red-400 p-2"
                     title="Delete certificate"
                   >
-                    <FaTrash />
+                    🗑️
                   </button>
                 </div>
               </div>

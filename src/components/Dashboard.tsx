@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { UserProfile, JobPosting, Certificate, JobApplication } from '../types/professional';
 import UserProfileComponent from './UserProfile';
 import CertificateManager from './CertificateManager';
 import JobBoard from './JobBoard';
-import { FaUser, FaTrophy, FaBriefcase, FaClipboardList, FaHome, FaArrowLeft } from 'react-icons/fa';
 
 interface DashboardProps {
   userProfile: UserProfile;
@@ -35,10 +33,10 @@ function Dashboard({
   );
 
   const tabs = [
-    { id: 'profile' as TabType, label: 'Profile', icon: FaUser },
-    { id: 'certificates' as TabType, label: 'Certificates', icon: FaTrophy },
-    { id: 'jobs' as TabType, label: 'Job Board', icon: FaBriefcase },
-    { id: 'applications' as TabType, label: 'My Applications', icon: FaClipboardList }
+    { id: 'profile' as TabType, label: 'Profile', icon: '👤' },
+    { id: 'certificates' as TabType, label: 'Certificates', icon: '🏆' },
+    { id: 'jobs' as TabType, label: 'Job Board', icon: '💼' },
+    { id: 'applications' as TabType, label: 'My Applications', icon: '📋' }
   ];
 
   const getApplicationStatusColor = (status: string) => {
@@ -62,26 +60,6 @@ function Dashboard({
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Dashboard Header with Home Navigation */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-mono-large mb-2" style={{ color: 'var(--mono-black)' }}>
-            Dashboard
-          </h1>
-          <p className="text-mono-body" style={{ color: 'var(--mono-grey-700)' }}>
-            Manage your professional profile and career development
-          </p>
-        </div>
-        <Link
-          to="/"
-          className="btn-mono-secondary inline-flex items-center space-x-2 hover:shadow-mono-lg transition-all duration-200"
-        >
-          <FaHome className="text-sm" />
-          <span>Back to Home</span>
-          <FaArrowLeft className="text-sm" />
-        </Link>
-      </div>
-
       {/* Navigation Tabs */}
       <div className="card-mono p-1 mb-6">
         <div className="flex space-x-1">
@@ -96,7 +74,7 @@ function Dashboard({
               }`}
               style={activeTab === tab.id ? { background: 'var(--mono-black)' } : {}}
             >
-              <tab.icon className="text-sm" />
+              <span className="text-sm">{tab.icon}</span>
               <span>{tab.label}</span>
             </button>
           ))}
@@ -139,24 +117,15 @@ function Dashboard({
 
             {userApplications.length === 0 ? (
               <div className="text-center py-12">
-                <FaClipboardList className="text-6xl mb-4 animate-mono-fade text-gray-400" />
+                <div className="text-6xl mb-4 animate-mono-fade">📋</div>
                 <h3 className="text-mono-headline mb-3">No applications yet</h3>
                 <p className="text-mono-body mb-6">Start applying to jobs to see your applications here!</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button
-                    onClick={() => setActiveTab('jobs')}
-                    className="btn-mono"
-                  >
-                    Browse Jobs
-                  </button>
-                  <Link
-                    to="/"
-                    className="btn-mono-secondary inline-flex items-center justify-center space-x-2"
-                  >
-                    <FaHome className="text-sm" />
-                    <span>Back to Home</span>
-                  </Link>
-                </div>
+                <button
+                  onClick={() => setActiveTab('jobs')}
+                  className="btn-mono"
+                >
+                  Browse Jobs
+                </button>
               </div>
             ) : (
               <div className="space-y-6">
@@ -244,18 +213,6 @@ function Dashboard({
           <div className="text-2xl font-bold text-mono-black mb-1">{userProfile.skills.length}</div>
           <div className="text-mono-caption">Skills</div>
         </div>
-      </div>
-
-      {/* Floating Home Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Link
-          to="/"
-          className="btn-mono inline-flex items-center space-x-2 shadow-mono-lg hover:shadow-mono-xl transition-all duration-200 transform hover:scale-105"
-          title="Go back to Home"
-        >
-          <FaHome className="text-sm" />
-          <span className="hidden sm:inline">Home</span>
-        </Link>
       </div>
     </div>
   );

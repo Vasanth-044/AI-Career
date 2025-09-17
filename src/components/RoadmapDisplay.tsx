@@ -1,20 +1,4 @@
-import { Link } from 'react-router-dom';
 import { CareerRoadmap } from '../types/career';
-import { 
-  FaBullseye, 
-  FaGraduationCap, 
-  FaRocket, 
-  FaBriefcase, 
-  FaBuilding, 
-  FaFileAlt,
-  FaDownload,
-  FaFileCode,
-  FaGift,
-  FaGem,
-  FaPlay,
-  FaTachometerAlt,
-  FaArrowRight
-} from 'react-icons/fa';
 
 interface RoadmapDisplayProps {
   roadmap: CareerRoadmap;
@@ -120,7 +104,7 @@ ${JSON.stringify(roadmap, null, 2)}
       {/* Header */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center space-x-2 bg-white px-6 py-3 rounded-full border border-gray-200 shadow-soft mb-6">
-          <FaBullseye className="text-2xl text-blue-600" />
+          <span className="text-2xl">🎯</span>
           <span className="text-xl font-bold text-gray-800">{roadmap.domain}</span>
         </div>
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Your Career Roadmap</h2>
@@ -149,26 +133,18 @@ ${JSON.stringify(roadmap, null, 2)}
           >
             ← Start Over
           </button>
-          <Link
-            to="/dashboard"
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-soft"
-          >
-            <FaTachometerAlt />
-            <span>Go to Dashboard</span>
-            <FaArrowRight />
-          </Link>
           <button
             onClick={downloadRoadmap}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-soft"
           >
-            <FaDownload />
+            <span>📄</span>
             <span>Download Roadmap</span>
           </button>
           <button
             onClick={downloadJSON}
             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 shadow-soft"
           >
-            <FaFileCode />
+            <span>📋</span>
             <span>Download JSON</span>
           </button>
         </div>
@@ -191,7 +167,7 @@ ${JSON.stringify(roadmap, null, 2)}
               {/* Skills */}
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                  <FaGraduationCap className="mr-2 text-blue-600" />
+                  <span className="mr-2">🎓</span>
                   Skills to Learn
                 </h4>
                 <ul className="space-y-2">
@@ -206,7 +182,7 @@ ${JSON.stringify(roadmap, null, 2)}
               {/* Free Resources */}
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                  <FaGift className="mr-2 text-green-600" />
+                  <span className="mr-2">🆓</span>
                   Free Resources
                 </h4>
                 <ul className="space-y-2">
@@ -231,7 +207,7 @@ ${JSON.stringify(roadmap, null, 2)}
               {/* Paid Resources */}
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                  <FaGem className="mr-2 text-purple-600" />
+                  <span className="mr-2">💎</span>
                   Paid Resources
                 </h4>
                 <ul className="space-y-2">
@@ -256,7 +232,7 @@ ${JSON.stringify(roadmap, null, 2)}
               {/* Projects */}
               <div>
                 <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                  <FaRocket className="mr-2 text-green-600" />
+                  <span className="mr-2">🚀</span>
                   Project Ideas
                 </h4>
                 <ul className="space-y-2">
@@ -273,7 +249,7 @@ ${JSON.stringify(roadmap, null, 2)}
             {phase.youtube_videos && phase.youtube_videos.length > 0 && (
               <div className="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
                 <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
-                  <FaPlay className="mr-2 text-red-600" />
+                  <span className="mr-2">📺</span>
                   Recommended YouTube Videos
                 </h4>
                 <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-4">
@@ -322,7 +298,7 @@ ${JSON.stringify(roadmap, null, 2)}
         {/* Career Paths */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-soft">
           <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <FaBriefcase className="mr-2 text-blue-600" />
+            <span className="mr-2">💼</span>
             Career Paths
           </h3>
           <div className="space-y-2">
@@ -337,7 +313,7 @@ ${JSON.stringify(roadmap, null, 2)}
         {/* Companies */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-soft">
           <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <FaBuilding className="mr-2 text-green-600" />
+            <span className="mr-2">🏢</span>
             Top Companies
           </h3>
           <div className="space-y-2">
@@ -352,7 +328,7 @@ ${JSON.stringify(roadmap, null, 2)}
         {/* Interview Prep */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-soft">
           <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-            <FaFileAlt className="mr-2 text-purple-600" />
+            <span className="mr-2">📝</span>
             Interview Prep
           </h3>
           <div className="space-y-2">

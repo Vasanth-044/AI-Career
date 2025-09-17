@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { JobPosting, UserProfile } from '../types/professional';
-import { FaBriefcase } from 'react-icons/fa';
+import { useState } from 'react';
+import { JobPosting, JobApplication, UserProfile } from '../types/professional';
 
 interface JobBoardProps {
   jobs: JobPosting[];
@@ -11,11 +10,10 @@ interface JobBoardProps {
 }
 
 function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: JobBoardProps) {
+  const [showPostForm, setShowPostForm] = useState(false);
   const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
-  const pushedJobStateRef = useRef(false);
-  const pushedAppStateRef = useRef(false);
   const [filters, setFilters] = useState({
     search: '',
     location: '',
@@ -43,21 +41,6 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
     }
   };
 
-  // Handle browser back/forward to close modals
-  useEffect(() => {
-    const onPopState = () => {
-      if (pushedAppStateRef.current) {
-        setShowApplicationForm(false);
-        pushedAppStateRef.current = false;
-      } else if (pushedJobStateRef.current) {
-        setSelectedJob(null);
-        pushedJobStateRef.current = false;
-      }
-    };
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
-  }, []);
-
   const formatSalary = (salary?: { min: number; max: number; currency: string }) => {
     if (!salary) return 'Salary not specified';
     return `${salary.currency} ${salary.min.toLocaleString()} - ${salary.max.toLocaleString()}`;
@@ -80,14 +63,13 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-mono-headline">Job Board</h2>
-          <p className="text-mono-body" style={{ color: 'var(--mono-grey-600)' }}>Find your next career opportunity</p>
+          <h2 className="text-apple-headline">Job Board</h2>
+          <p className="text-apple-body">Find your next career opportunity</p>
         </div>
         {isHR && onPostJob && (
           <button
-            onClick={() => {/* TODO: Implement post job form */}}
-            className="px-4 py-2 text-sm font-medium rounded-md border text-white"
-            style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+            onClick={() => setShowPostForm(true)}
+            className="btn-apple"
           >
             + Post Job
           </button>
@@ -95,36 +77,36 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
       </div>
 
       {/* Filters */}
-      <div className="rounded-2xl p-6 border" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
+      <div className="card-apple p-apple-lg">
         <div className="grid md:grid-cols-4 gap-6">
           <div>
-            <label className="block text-mono-body font-medium mb-3">Search</label>
+            <label className="block text-apple-body font-medium mb-3">Search</label>
             <input
               type="text"
               placeholder="Job title, company, or skills..."
               value={filters.search}
               onChange={(e) => setFilters({...filters, search: e.target.value})}
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+              className="input-apple"
             />
           </div>
           
           <div>
-            <label className="block text-mono-body font-medium mb-3">Location</label>
+            <label className="block text-apple-body font-medium mb-3">Location</label>
             <input
               type="text"
               placeholder="City, state, or remote"
               value={filters.location}
               onChange={(e) => setFilters({...filters, location: e.target.value})}
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+              className="input-apple"
             />
           </div>
           
           <div>
-            <label className="block text-mono-body font-medium mb-3">Job Type</label>
+            <label className="block text-apple-body font-medium mb-3">Job Type</label>
             <select
               value={filters.type}
               onChange={(e) => setFilters({...filters, type: e.target.value})}
-              className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+              className="input-apple"
             >
               <option value="">All Types</option>
               <option value="full-time">Full-time</option>
@@ -140,9 +122,9 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
                 type="checkbox"
                 checked={filters.remote}
                 onChange={(e) => setFilters({...filters, remote: e.target.checked})}
-                className="w-5 h-5 text-mono-black bg-white border-2 border-mono-grey-300 rounded focus:ring-mono-black focus:ring-2"
+                className="w-5 h-5 text-apple-blue bg-white border-2 border-apple-gray-300 rounded focus:ring-apple-blue focus:ring-2"
               />
-              <span className="text-mono-body">Remote only</span>
+              <span className="text-apple-body">Remote only</span>
             </label>
           </div>
         </div>
@@ -152,58 +134,56 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
       <div className="space-y-6">
         {filteredJobs.length === 0 ? (
           <div className="text-center py-16">
-            <FaBriefcase className="text-8xl mb-6 text-gray-400" />
-            <h3 className="text-mono-headline mb-4">No jobs found</h3>
-            <p className="text-mono-body" style={{ color: 'var(--mono-grey-600)' }}>Try adjusting your search criteria</p>
+            <div className="text-8xl mb-6 animate-apple-float">💼</div>
+            <h3 className="text-apple-headline mb-4">No jobs found</h3>
+            <p className="text-apple-body">Try adjusting your search criteria</p>
           </div>
         ) : (
           filteredJobs.map((job) => (
-            <div key={job.id} className="rounded-2xl p-6 border hover:shadow-sm transition-shadow" style={{ background: 'white', borderColor: 'var(--mono-grey-200)' }}>
+            <div key={job.id} className="card-apple p-apple-xl hover:scale-[1.02] transition-transform duration-300">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center space-x-4 mb-4">
-                    <h3 className="text-mono-headline">{job.title}</h3>
+                    <h3 className="text-apple-headline">{job.title}</h3>
                     <span 
                       className="px-3 py-1 rounded-xl text-sm font-medium"
-                      style={{ background: 'var(--mono-grey-100)', color: 'var(--mono-grey-800)' }}
+                      style={{ background: 'var(--apple-gray-200)', color: 'var(--apple-gray-800)' }}
                     >
                       {job.type}
                     </span>
                     {job.remote && (
                       <span 
                         className="px-3 py-1 rounded-xl text-sm font-medium text-white"
-                        style={{ background: 'var(--mono-black)' }}
+                        style={{ background: 'var(--apple-green)' }}
                       >
                         Remote
                       </span>
                     )}
                   </div>
                   
-                  <p className="text-mono-body mb-4" style={{ color: 'var(--mono-grey-700)' }}>{job.company} • {job.location}</p>
+                  <p className="text-apple-body mb-4">{job.company} • {job.location}</p>
                   
-                  <div className="flex items-center space-x-6 text-mono-caption mb-4" style={{ color: 'var(--mono-grey-600)' }}>
+                  <div className="flex items-center space-x-6 text-apple-caption mb-4">
                     <span>{formatSalary(job.salary)}</span>
                     <span>Posted {getTimeAgo(job.postedAt)}</span>
                     <span>{job.applications.length} applications</span>
                   </div>
 
-                  <p className="text-mono-body mb-6 line-clamp-2" style={{ color: 'var(--mono-grey-700)' }}>
-                    {job.description}
-                  </p>
+                  <p className="text-apple-body mb-6 line-clamp-2">{job.description}</p>
 
                   <div className="mb-6">
                     <div className="flex flex-wrap gap-3">
                       {job.skills.slice(0, 5).map((skill, index) => (
                         <span 
                           key={index} 
-                          className="px-3 py-1 rounded-full text-sm font-medium border"
-                          style={{ background: 'white', color: 'var(--mono-grey-800)', borderColor: 'var(--mono-grey-200)' }}
+                          className="px-3 py-1 rounded-lg text-sm font-medium"
+                          style={{ background: 'var(--apple-gray-100)', color: 'var(--apple-gray-700)' }}
                         >
                           {skill}
                         </span>
                       ))}
                       {job.skills.length > 5 && (
-                        <span className="text-mono-caption text-sm" style={{ color: 'var(--mono-grey-600)' }}>+{job.skills.length - 5} more</span>
+                        <span className="text-apple-caption text-sm">+{job.skills.length - 5} more</span>
                       )}
                     </div>
                   </div>
@@ -212,13 +192,9 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
                     <button
                       onClick={() => {
                         setSelectedJob(job);
-                        if (!pushedJobStateRef.current) {
-                          window.history.pushState({ modal: 'job' }, '');
-                          pushedJobStateRef.current = true;
-                        }
+                        setShowApplicationForm(true);
                       }}
-                      className="px-6 py-3 rounded-xl border text-mono-body font-medium"
-                      style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                      className="px-6 py-3 rounded-xl border-2 border-apple-gray-300 text-apple-gray-600 hover:bg-apple-gray-100 transition-colors font-medium"
                     >
                       View Details
                     </button>
@@ -226,18 +202,9 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
                       <button
                         onClick={() => {
                           setSelectedJob(job);
-                          if (!pushedJobStateRef.current) {
-                            window.history.pushState({ modal: 'job' }, '');
-                            pushedJobStateRef.current = true;
-                          }
                           setShowApplicationForm(true);
-                          if (!pushedAppStateRef.current) {
-                            window.history.pushState({ modal: 'apply' }, '');
-                            pushedAppStateRef.current = true;
-                          }
                         }}
-                        className="px-6 py-3 rounded-xl border text-white"
-                        style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+                        className="btn-apple"
                       >
                         Apply Now
                       </button>
@@ -253,69 +220,53 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
       {/* Job Details Modal */}
       {selectedJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="rounded-2xl border max-w-4xl w-full max-h-[90vh] overflow-y-auto text-neutral-900" style={{ background: 'white', borderColor: 'var(--mono-grey-200)' }}>
+          <div className="bg-slate-900 rounded-xl border border-slate-800 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-mono-headline mb-2">{selectedJob.title}</h2>
-                  <p className="text-mono-body text-lg text-neutral-700">{selectedJob.company} • {selectedJob.location}</p>
+                  <h2 className="text-2xl font-bold text-slate-100 mb-2">{selectedJob.title}</h2>
+                  <p className="text-slate-400 text-lg">{selectedJob.company} • {selectedJob.location}</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => {
-                      if (pushedJobStateRef.current) {
-                        window.history.back();
-                      } else {
-                        setSelectedJob(null);
-                      }
-                    }}
-                    className="px-3 py-1.5 rounded-md border text-sm"
-                    style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => setSelectedJob(null)}
-                    className="text-2xl"
-                    style={{ color: 'var(--mono-grey-600)' }}
-                  >
-                    ×
-                  </button>
-                </div>
+                <button
+                  onClick={() => setSelectedJob(null)}
+                  className="text-slate-400 hover:text-slate-200 text-2xl"
+                >
+                  ×
+                </button>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-3 text-neutral-900">Job Details</h3>
+                  <h3 className="text-lg font-semibold text-slate-100 mb-3">Job Details</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">Type:</span>
-                      <span className="text-neutral-800">{selectedJob.type}</span>
+                      <span className="text-slate-400">Type:</span>
+                      <span className="text-slate-300">{selectedJob.type}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">Salary:</span>
-                      <span className="text-neutral-800">{formatSalary(selectedJob.salary)}</span>
+                      <span className="text-slate-400">Salary:</span>
+                      <span className="text-slate-300">{formatSalary(selectedJob.salary)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">Experience:</span>
-                      <span className="text-neutral-800">{selectedJob.experience}</span>
+                      <span className="text-slate-400">Experience:</span>
+                      <span className="text-slate-300">{selectedJob.experience}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">Education:</span>
-                      <span className="text-neutral-800">{selectedJob.education}</span>
+                      <span className="text-slate-400">Education:</span>
+                      <span className="text-slate-300">{selectedJob.education}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">Remote:</span>
-                      <span className="text-neutral-800">{selectedJob.remote ? 'Yes' : 'No'}</span>
+                      <span className="text-slate-400">Remote:</span>
+                      <span className="text-slate-300">{selectedJob.remote ? 'Yes' : 'No'}</span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-3 text-neutral-900">Required Skills</h3>
+                  <h3 className="text-lg font-semibold text-slate-100 mb-3">Required Skills</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedJob.skills.map((skill, index) => (
-                      <span key={index} className="px-2.5 py-1 text-xs font-medium rounded-full border" style={{ background: 'white', color: 'var(--mono-grey-800)', borderColor: 'var(--mono-grey-200)' }}>
+                      <span key={index} className="bg-slate-800 text-slate-300 px-2 py-1 rounded-full text-sm border border-slate-700">
                         {skill}
                       </span>
                     ))}
@@ -324,14 +275,14 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
               </div>
 
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3 text-neutral-900">Description</h3>
-                <p className="whitespace-pre-wrap text-neutral-800">{selectedJob.description}</p>
+                <h3 className="text-lg font-semibold text-slate-100 mb-3">Description</h3>
+                <p className="text-slate-300 whitespace-pre-wrap">{selectedJob.description}</p>
               </div>
 
               {selectedJob.requirements.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3 text-neutral-900">Requirements</h3>
-                  <ul className="list-disc list-inside space-y-1 text-neutral-800">
+                  <h3 className="text-lg font-semibold text-slate-100 mb-3">Requirements</h3>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300">
                     {selectedJob.requirements.map((req, index) => (
                       <li key={index}>{req}</li>
                     ))}
@@ -341,8 +292,8 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
 
               {selectedJob.benefits.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3 text-neutral-900">Benefits</h3>
-                  <ul className="list-disc list-inside space-y-1 text-neutral-800">
+                  <h3 className="text-lg font-semibold text-slate-100 mb-3">Benefits</h3>
+                  <ul className="list-disc list-inside space-y-1 text-slate-300">
                     {selectedJob.benefits.map((benefit, index) => (
                       <li key={index}>{benefit}</li>
                     ))}
@@ -355,13 +306,8 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
                   <button
                     onClick={() => {
                       setShowApplicationForm(true);
-                      if (!pushedAppStateRef.current) {
-                        window.history.pushState({ modal: 'apply' }, '');
-                        pushedAppStateRef.current = true;
-                      }
                     }}
-                    className="px-6 py-3 rounded-xl border text-white"
-                    style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
                   >
                     Apply for this position
                   </button>
@@ -375,40 +321,24 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
       {/* Application Form Modal */}
       {showApplicationForm && selectedJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="rounded-2xl border max-w-2xl w-full" style={{ background: 'var(--mono-grey-50)', borderColor: 'var(--mono-grey-200)' }}>
+          <div className="bg-slate-900 rounded-xl border border-slate-800 max-w-2xl w-full">
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-mono-headline">Apply for {selectedJob.title}</h2>
-                  <p className="text-mono-body" style={{ color: 'var(--mono-grey-700)' }}>{selectedJob.company}</p>
+                  <h2 className="text-xl font-bold text-slate-100">Apply for {selectedJob.title}</h2>
+                  <p className="text-slate-400">{selectedJob.company}</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => {
-                      if (pushedAppStateRef.current) {
-                        window.history.back();
-                      } else {
-                        setShowApplicationForm(false);
-                      }
-                    }}
-                    className="px-3 py-1.5 rounded-md border text-sm"
-                    style={{ borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => setShowApplicationForm(false)}
-                    className="text-2xl"
-                    style={{ color: 'var(--mono-grey-600)' }}
-                  >
-                    ×
-                  </button>
-                </div>
+                <button
+                  onClick={() => setShowApplicationForm(false)}
+                  className="text-slate-400 hover:text-slate-200 text-2xl"
+                >
+                  ×
+                </button>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-mono-grey-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
                     Cover Letter (Optional)
                   </label>
                   <textarea
@@ -416,22 +346,20 @@ function JobBoard({ jobs, userProfile, onApplyToJob, onPostJob, isHR = false }: 
                     onChange={(e) => setCoverLetter(e.target.value)}
                     placeholder="Tell the employer why you're interested in this position..."
                     rows={6}
-                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-200 focus:border-blue-500 resize-none"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-100 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 resize-none"
                   />
                 </div>
 
                 <div className="flex space-x-3">
                   <button
                     onClick={handleApply}
-                    className="px-6 py-3 rounded-xl border text-white"
-                    style={{ background: 'var(--mono-black)', borderColor: 'var(--mono-black)' }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
                   >
                     Submit Application
                   </button>
                   <button
                     onClick={() => setShowApplicationForm(false)}
-                    className="px-6 py-3 rounded-xl border"
-                    style={{ background: 'transparent', borderColor: 'var(--mono-grey-300)', color: 'var(--mono-grey-800)' }}
+                    className="bg-slate-800 hover:bg-slate-700 text-slate-300 px-6 py-3 rounded-lg border border-slate-700 transition-colors"
                   >
                     Cancel
                   </button>
